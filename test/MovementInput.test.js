@@ -5,6 +5,7 @@ import {
   shouldShowTouchControls,
   TouchDirectionState,
 } from '../src/game/systems/TouchDirectionState.js';
+import { TouchControls } from '../src/game/ui/TouchControls.js';
 
 test('combines keyboard and touch input into one movement direction', () => {
   const keyboard = {
@@ -47,4 +48,30 @@ test('shows mobile controls for touch or coarse-pointer devices', () => {
   assert.equal(shouldShowTouchControls({ maxTouchPoints: 2 }), true);
   assert.equal(shouldShowTouchControls({ coarsePointer: true }), true);
   assert.equal(shouldShowTouchControls(), false);
+});
+
+test('hides controls safely when a desktop game ends', () => {
+  const root = {
+    visible: true,
+    setDepth() {
+      return this;
+    },
+    setVisible(visible) {
+      this.visible = visible;
+      return this;
+    },
+    destroy() {},
+  };
+  const scene = {
+    add: {
+      container: () => root,
+    },
+    events: {
+      once() {},
+    },
+  };
+  const controls = new TouchControls(scene, { forceVisible: false });
+
+  assert.doesNotThrow(() => controls.setVisible(false));
+  assert.equal(root.visible, false);
 });

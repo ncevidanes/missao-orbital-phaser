@@ -24,6 +24,10 @@ export class TouchControls {
     this.visible = forceVisible ?? detectTouchCapability();
     this.directionButtons = new Map();
     this.root = scene.add.container(0, 0).setDepth(80).setVisible(this.visible);
+    this.releaseAll = () => {
+      this.directionState.clear();
+      this.syncButtonVisuals();
+    };
 
     if (!this.visible) {
       scene.events.once('shutdown', this.destroy, this);
@@ -35,10 +39,6 @@ export class TouchControls {
 
     this.releasePointer = (pointer) => {
       this.directionState.release(pointer.id);
-      this.syncButtonVisuals();
-    };
-    this.releaseAll = () => {
-      this.directionState.clear();
       this.syncButtonVisuals();
     };
 
