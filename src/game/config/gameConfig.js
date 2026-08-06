@@ -9,6 +9,12 @@ export function createGameConfig(parent) {
     width: 1280,
     height: 720,
     backgroundColor: '#081225',
+    input: {
+      activePointers: 3,
+      touch: {
+        capture: true,
+      },
+    },
     physics: {
       default: 'arcade',
       arcade: {

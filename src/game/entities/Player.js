@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { resolveMovementAxes } from '../systems/MovementInput.js';
 
 const PLAYER_SPEED = 310;
 
@@ -14,11 +15,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.setCircle(20, 12, 12);
   }
 
-  move(cursors, wasd) {
-    const horizontal = Number(cursors.right.isDown || wasd.right.isDown)
-      - Number(cursors.left.isDown || wasd.left.isDown);
-    const vertical = Number(cursors.down.isDown || wasd.down.isDown)
-      - Number(cursors.up.isDown || wasd.up.isDown);
+  move(cursors, wasd, touchControls = {}) {
+    const { horizontal, vertical } = resolveMovementAxes(
+      cursors,
+      wasd,
+      touchControls,
+    );
 
     const direction = new Phaser.Math.Vector2(horizontal, vertical);
 

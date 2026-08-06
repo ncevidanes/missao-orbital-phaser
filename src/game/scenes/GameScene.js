@@ -26,6 +26,7 @@ import { createStarfield } from '../systems/Starfield.js';
 import { getSoundManager } from '../systems/SynthSoundManager.js';
 import { createGameTextures } from '../systems/TextureFactory.js';
 import { Hud } from '../ui/Hud.js';
+import { TouchControls } from '../ui/TouchControls.js';
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -71,6 +72,9 @@ export class GameScene extends Phaser.Scene {
     });
     this.restartKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     this.menuKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
+    this.touchControls = new TouchControls(this, {
+      onMenu: () => this.returnToMenu(),
+    });
 
     this.physics.add.overlap(
       this.player,
@@ -122,7 +126,7 @@ export class GameScene extends Phaser.Scene {
       return;
     }
 
-    this.player.move(this.cursors, this.wasd);
+    this.player.move(this.cursors, this.wasd, this.touchControls.getMovement());
     this.shipAnimator.update(this.player, delta);
     const shieldActive = this.shieldController.isActive(this.time.now);
     this.shieldAura.update(this.player, shieldActive);
@@ -369,6 +373,7 @@ export class GameScene extends Phaser.Scene {
     this.powerUpTimer?.remove(false);
     this.clockTimer?.remove(false);
     this.player.stop();
+    this.touchControls.setVisible(false);
     this.shipAnimator.stop();
     this.shieldAura.hide();
     this.player.body.enable = false;
