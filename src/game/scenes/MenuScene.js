@@ -108,7 +108,7 @@ export class MenuScene extends Phaser.Scene {
     );
     this.updateSoundButton();
 
-    this.add.text(width / 2, 606, 'Setas ou WASD · Escudo azul · Reparo verde', {
+    this.add.text(width / 2, 606, 'Setas, WASD ou toque · Escudo azul · Reparo verde', {
       ...TITLE_STYLE,
       fontSize: '20px',
       fontStyle: 'normal',
@@ -123,7 +123,7 @@ export class MenuScene extends Phaser.Scene {
       strokeThickness: 3,
     }).setOrigin(0.5);
 
-    this.add.text(width - 24, height - 20, 'v0.3.0', {
+    this.add.text(width - 24, height - 20, 'v0.3.2', {
       ...TITLE_STYLE,
       fontSize: '14px',
       color: '#577a94',

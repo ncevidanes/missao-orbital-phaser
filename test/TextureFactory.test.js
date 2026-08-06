@@ -20,7 +20,7 @@ function createContext() {
   };
 }
 
-test('generates every code-drawn texture used by version 0.3.0', () => {
+test('generates every code-drawn texture used by version 0.3.2', () => {
   const created = [];
   const scene = {
     game: { renderer: {} },

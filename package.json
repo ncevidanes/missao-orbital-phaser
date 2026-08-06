@@ -1,6 +1,6 @@
 {
   "name": "missao-orbital-phaser",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "private": true,
   "type": "module",
   "description": "Jogo 2D Missão Orbital, feito com JavaScript, Phaser e Vite.",
