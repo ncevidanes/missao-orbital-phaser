@@ -51,10 +51,10 @@ export class TouchControls {
     const { height } = this.scene.scale;
     const centerX = 122;
     const centerY = height - 134;
-    const base = this.scene.add.circle(centerX, centerY, 108, 0x07162c, 0.62)
-      .setStrokeStyle(2, 0x68d9ff, 0.42);
-    const center = this.scene.add.circle(centerX, centerY, 23, 0x68d9ff, 0.16)
-      .setStrokeStyle(1, 0x68d9ff, 0.35);
+    const base = this.scene.add.circle(centerX, centerY, 108, 0x031003, 0.68)
+      .setStrokeStyle(2, 0x17843b, 0.58);
+    const center = this.scene.add.circle(centerX, centerY, 23, 0x39ff70, 0.12)
+      .setStrokeStyle(1, 0x39ff70, 0.42);
 
     this.root.add([base, center]);
 
@@ -63,16 +63,16 @@ export class TouchControls {
         centerX + x,
         centerY + y,
         38,
-        0x173756,
+        0x061d0b,
         0.88,
       )
-        .setStrokeStyle(2, 0x85f2ff, 0.72)
+        .setStrokeStyle(2, 0x39ff70, 0.72)
         .setInteractive({ useHandCursor: true });
       const arrow = this.scene.add.text(centerX + x, centerY + y - 1, label, {
-        fontFamily: 'Arial, sans-serif',
+        fontFamily: '"Courier New", Courier, monospace',
         fontSize: '30px',
         fontStyle: 'bold',
-        color: '#d8f6ff',
+        color: '#b8ffca',
       }).setOrigin(0.5);
 
       const press = (pointer) => {
@@ -102,23 +102,23 @@ export class TouchControls {
     const { width, height } = this.scene.scale;
     const x = width - 92;
     const y = height - 64;
-    const background = this.scene.add.rectangle(x, y, 150, 68, 0x173756, 0.9)
-      .setStrokeStyle(2, 0x85f2ff, 0.7)
+    const background = this.scene.add.rectangle(x, y, 150, 68, 0x061d0b, 0.9)
+      .setStrokeStyle(2, 0x39ff70, 0.7)
       .setInteractive({ useHandCursor: true });
     const label = this.scene.add.text(x, y, 'MENU', {
-      fontFamily: 'Inter, Arial, sans-serif',
+      fontFamily: '"Courier New", Courier, monospace',
       fontSize: '21px',
       fontStyle: 'bold',
-      color: '#d8f6ff',
+      color: '#b8ffca',
     }).setOrigin(0.5);
 
     background
       .on('pointerdown', () => {
-        background.setFillStyle(0x2a79a6, 0.96);
+        background.setFillStyle(0x17843b, 0.96);
         onMenu?.();
       })
-      .on('pointerup', () => background.setFillStyle(0x173756, 0.9))
-      .on('pointerout', () => background.setFillStyle(0x173756, 0.9));
+      .on('pointerup', () => background.setFillStyle(0x061d0b, 0.9))
+      .on('pointerout', () => background.setFillStyle(0x061d0b, 0.9));
 
     this.root.add([background, label]);
   }
@@ -136,7 +136,7 @@ export class TouchControls {
     this.directionButtons.forEach((button, direction) => {
       const active = this.directionState.isPressed(direction);
       button
-        .setFillStyle(active ? 0x2a79a6 : 0x173756, active ? 0.98 : 0.88)
+        .setFillStyle(active ? 0x17843b : 0x061d0b, active ? 0.98 : 0.88)
         .setScale(active ? 0.92 : 1);
     });
   }

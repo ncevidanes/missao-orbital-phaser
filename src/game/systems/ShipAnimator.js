@@ -43,7 +43,7 @@ export class ShipAnimator {
   }
 
   createTrailSpark(x, y, angle) {
-    const spark = this.scene.add.circle(x, y, 3.5, 0x68e8ff, 0.8).setDepth(8);
+    const spark = this.scene.add.rectangle(x, y, 5, 5, 0x39ff70, 0.8).setDepth(8);
     this.scene.tweens.add({
       targets: spark,
       x: x - Math.sin(angle) * Phaser.Math.Between(8, 18),

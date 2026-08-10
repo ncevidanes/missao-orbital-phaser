@@ -2,10 +2,15 @@
 
 Jogo 2D construído com **JavaScript, Phaser 4 e Vite**.
 
-Versão atual: **0.3.2**. Esta atualização mantém os controles táteis da versão
-anterior e garante que o canvas caiba na área realmente visível do navegador móvel.
+Versão atual: **0.4.0 — Retro Edition / Green Terminal Build**. Esta etapa
+adota uma identidade monocromática de terminal CRT e adiciona meteoros errantes
+com movimento browniano correlacionado.
 
-## Recursos da versão 0.3.2
+## Green Terminal Edition
+
+![Capa da Missão Orbital — Green Terminal Edition](docs/images/cover-green-terminal-630x500.png)
+
+## Recursos da versão 0.4.0
 
 - menu inicial com instruções e exibição do recorde;
 - movimento da nave com setas, `WASD` ou direcional tátil;
@@ -16,13 +21,20 @@ anterior e garante que o canvas caiba na área realmente visível do navegador m
 - cinco níveis automáticos de dificuldade;
 - três classes de asteroide: pequeno e veloz, médio e equilibrado, grande e lento;
 - asteroides progressivamente mais rápidos e frequentes, com limite ativo por nível;
+- meteoros errantes com deriva lateral aleatória, suave e limitada;
+- frequência, velocidade e desvio dos meteoros crescentes nos cinco níveis;
 - três vidas e invulnerabilidade temporária após uma colisão;
 - cristais que valem 10 pontos;
-- escudo azul que absorve um impacto por até oito segundos;
-- reparo verde que recupera uma vida ou concede 20 pontos quando as vidas estão cheias;
+- escudo que absorve um impacto por até oito segundos;
+- reparo que recupera uma vida ou concede 20 pontos quando as vidas estão cheias;
 - cronômetro de 60 segundos;
 - recorde salvo no navegador;
-- nave animada com propulsor e rastro, fundo em paralaxe e novos efeitos de coleta;
+- campo de estrelas pixelado em três camadas de paralaxe;
+- estrelas próximas com rastros maiores e movimento mais rápido;
+- velocidade do fundo crescente ao longo dos cinco níveis;
+- sprites em blocos, paleta de fósforo verde e renderização pixel-perfect;
+- scanlines, vinheta e brilho discreto de monitor CRT;
+- nave animada com propulsor e rastro;
 - explosões, impacto de câmera e efeito visual do escudo;
 - sons sintetizados pelo próprio jogo, com botão para ligar e desligar;
 - tela de resultado com reinício e retorno ao menu;
@@ -86,17 +98,20 @@ src/
     │   ├── AsteroidCatalog.js
     │   ├── GameBalance.js
     │   ├── gameConfig.js
-    │   └── PowerUpCatalog.js
+    │   ├── PowerUpCatalog.js
+    │   └── RetroPalette.js
     ├── entities/
     │   ├── Player.js
     │   ├── Asteroid.js
     │   ├── Crystal.js
-    │   └── PowerUp.js
+    │   ├── PowerUp.js
+    │   └── WanderingMeteor.js
     ├── scenes/
     │   ├── MenuScene.js
     │   └── GameScene.js
     ├── systems/
     │   ├── AsteroidRegistration.js
+    │   ├── BrownianMotion.js
     │   ├── ExplosionEffect.js
     │   ├── GameViewport.js
     │   ├── HighScoreRepository.js
@@ -123,6 +138,8 @@ src/
 - `0.3.0`: nave animada, três asteroides, escudo, reparo e balanceamento revisado.
 - `0.3.1`: direcional tátil, múltiplos toques, botão de menu e layout móvel otimizado.
 - `0.3.2`: canvas ajustado ao viewport visual e controles afastados da borda inferior.
+- `0.4.0`: Retro Edition com estrelas em três camadas, Green Terminal Build e
+  meteoros errantes com movimento browniano correlacionado.
 
 ## Referências oficiais
 

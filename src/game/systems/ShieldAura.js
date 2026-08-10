@@ -1,7 +1,7 @@
 export class ShieldAura {
   constructor(scene, player) {
-    this.aura = scene.add.circle(player.x, player.y, 40, 0x68e8ff, 0.08)
-      .setStrokeStyle(4, 0x85f2ff, 0.9)
+    this.aura = scene.add.circle(player.x, player.y, 40, 0x39ff70, 0.06)
+      .setStrokeStyle(4, 0xb8ffca, 0.9)
       .setDepth(player.depth + 1)
       .setVisible(false);
 

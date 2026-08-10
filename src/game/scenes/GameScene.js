@@ -16,7 +16,12 @@ import { Asteroid } from '../entities/Asteroid.js';
 import { Crystal } from '../entities/Crystal.js';
 import { Player } from '../entities/Player.js';
 import { PowerUp } from '../entities/PowerUp.js';
+import { WanderingMeteor } from '../entities/WanderingMeteor.js';
 import { addFallingAsteroid } from '../systems/AsteroidRegistration.js';
+import {
+  getBrownianMeteorProfile,
+  getBrownianSpawnDelay,
+} from '../systems/BrownianMotion.js';
 import { createExplosion, createPickupBurst } from '../systems/ExplosionEffect.js';
 import { HighScoreRepository } from '../systems/HighScoreRepository.js';
 import { ShieldAura } from '../systems/ShieldAura.js';
@@ -42,11 +47,15 @@ export class GameScene extends Phaser.Scene {
     this.difficulty = getDifficulty(0);
     this.shieldController = new ShieldController();
     this.shieldWasActive = false;
+    this.meteorWarningShown = false;
   }
 
   create() {
     createGameTextures(this);
-    createStarfield(this, { animated: true });
+    createStarfield(this, {
+      animated: true,
+      getLevel: () => this.difficulty.level,
+    });
 
     const { width, height } = this.scale;
     this.highScoreRepository = new HighScoreRepository();
@@ -56,6 +65,7 @@ export class GameScene extends Phaser.Scene {
     this.shipAnimator = new ShipAnimator(this, this.player);
     this.shieldAura = new ShieldAura(this, this.player);
     this.asteroids = this.physics.add.group();
+    this.meteors = this.physics.add.group();
     this.crystals = this.physics.add.group();
     this.powerUps = this.physics.add.group();
     this.hud = new Hud(this, {
@@ -85,6 +95,13 @@ export class GameScene extends Phaser.Scene {
     );
     this.physics.add.overlap(
       this.player,
+      this.meteors,
+      this.handleAsteroidHit,
+      undefined,
+      this,
+    );
+    this.physics.add.overlap(
+      this.player,
       this.crystals,
       this.collectCrystal,
       undefined,
@@ -107,10 +124,11 @@ export class GameScene extends Phaser.Scene {
 
     this.spawnAsteroid();
     this.scheduleNextAsteroid();
+    this.scheduleNextMeteor(3600);
     this.spawnCrystal();
     this.scheduleNextPowerUp();
     this.updateHud();
-    this.cameras.main.fadeIn(250, 4, 11, 24);
+    this.cameras.main.fadeIn(250, 1, 4, 1);
   }
 
   update(_time, delta) {
@@ -134,7 +152,8 @@ export class GameScene extends Phaser.Scene {
       this.updateHud();
     }
     this.shieldWasActive = shieldActive;
-    this.destroyOffscreenAsteroids();
+    this.updateWanderingMeteors(delta);
+    this.destroyOffscreenHazards();
   }
 
   scheduleNextAsteroid() {
@@ -167,6 +186,41 @@ export class GameScene extends Phaser.Scene {
     const variant = selectAsteroidVariant(Phaser.Math.FloatBetween(0, 1));
     const asteroid = new Asteroid(this, x, -70, variant);
     addFallingAsteroid(this.asteroids, asteroid, speed);
+  }
+
+  scheduleNextMeteor(delay = getBrownianSpawnDelay(this.difficulty.level)) {
+    if (this.gameEnded) {
+      return;
+    }
+
+    this.meteorTimer = this.time.delayedCall(delay, () => {
+      this.spawnMeteor();
+      this.scheduleNextMeteor();
+    });
+  }
+
+  spawnMeteor() {
+    const profile = getBrownianMeteorProfile(this.difficulty.level);
+    if (
+      this.gameEnded
+      || this.meteors.countActive(true) >= profile.maxActive
+    ) {
+      return;
+    }
+
+    const meteor = new WanderingMeteor(
+      this,
+      Phaser.Math.Between(70, this.scale.width - 70),
+      -74,
+      profile,
+    );
+    this.meteors.add(meteor);
+    meteor.startDrifting();
+
+    if (!this.meteorWarningShown) {
+      this.meteorWarningShown = true;
+      this.hud.showPowerUp('> ALERTA: METEORO ERRANTE', '#39ff70');
+    }
   }
 
   scheduleNextPowerUp() {
@@ -227,7 +281,7 @@ export class GameScene extends Phaser.Scene {
     if (this.shieldController.consume(this.time.now)) {
       this.invulnerable = true;
       this.shieldAura.hide();
-      createExplosion(this, impactX, impactY, 0x68e8ff);
+      createExplosion(this, impactX, impactY, 0x39ff70);
       this.soundManager.playShieldBreak();
       this.cameras.main.shake(120, 0.004);
       this.hud.showPowerUp('ESCUDO ABSORVEU O IMPACTO');
@@ -249,7 +303,7 @@ export class GameScene extends Phaser.Scene {
       this.player.setAlpha(0);
       this.shipAnimator.stop();
       this.shieldAura.hide();
-      createExplosion(this, this.player.x, this.player.y, 0x68e8ff);
+      createExplosion(this, this.player.x, this.player.y, 0x39ff70);
       this.endGame('Você ficou sem vidas.');
       return;
     }
@@ -295,18 +349,18 @@ export class GameScene extends Phaser.Scene {
     if (powerUpType === POWER_UP_TYPES.REPAIR) {
       if (this.lives < MAX_LIVES) {
         this.lives += 1;
-        this.hud.showPowerUp('VIDA RECUPERADA', '#7dff9d');
+        this.hud.showPowerUp('VIDA RECUPERADA', '#b8ffca');
       } else {
         this.score += FULL_LIFE_POWER_UP_SCORE;
         this.highScore = Math.max(this.highScore, this.score);
-        this.hud.showPowerUp(`VIDAS CHEIAS: +${FULL_LIFE_POWER_UP_SCORE}`, '#7dff9d');
+        this.hud.showPowerUp(`VIDAS CHEIAS: +${FULL_LIFE_POWER_UP_SCORE}`, '#b8ffca');
       }
-      createPickupBurst(this, x, y, 0x7dff9d);
+      createPickupBurst(this, x, y, 0xb8ffca);
     } else {
       this.shieldController.activate(this.time.now, SHIELD_DURATION_MS);
       this.shieldWasActive = true;
       this.hud.showPowerUp('ESCUDO ATIVADO');
-      createPickupBurst(this, x, y, 0x68e8ff);
+      createPickupBurst(this, x, y, 0x39ff70);
     }
 
     this.updateHud();
@@ -334,10 +388,23 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  destroyOffscreenAsteroids() {
+  updateWanderingMeteors(delta) {
+    this.meteors.getChildren().forEach((meteor) => {
+      if (meteor.active) {
+        meteor.updateBrownian(delta);
+      }
+    });
+  }
+
+  destroyOffscreenHazards() {
     this.asteroids.getChildren().forEach((asteroid) => {
       if (asteroid.active && asteroid.y > this.scale.height + 80) {
         asteroid.destroy();
+      }
+    });
+    this.meteors.getChildren().forEach((meteor) => {
+      if (meteor.active && meteor.y > this.scale.height + 90) {
+        meteor.destroy();
       }
     });
   }
@@ -370,6 +437,7 @@ export class GameScene extends Phaser.Scene {
     this.gameEnded = true;
     this.invulnerable = true;
     this.asteroidTimer?.remove(false);
+    this.meteorTimer?.remove(false);
     this.powerUpTimer?.remove(false);
     this.clockTimer?.remove(false);
     this.player.stop();
@@ -382,6 +450,12 @@ export class GameScene extends Phaser.Scene {
       if (asteroid.active) {
         asteroid.setVelocity(0, 0);
         asteroid.setAngularVelocity(0);
+      }
+    });
+
+    this.meteors.getChildren().forEach((meteor) => {
+      if (meteor.active) {
+        meteor.setVelocity(0, 0);
       }
     });
 

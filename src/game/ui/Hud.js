@@ -1,19 +1,19 @@
 import { createTextButton } from './TextButton.js';
 
 const TEXT_STYLE = {
-  fontFamily: 'Inter, Arial, sans-serif',
+  fontFamily: '"Courier New", Courier, monospace',
   fontSize: '28px',
   fontStyle: 'bold',
-  color: '#eefaff',
-  stroke: '#07101f',
-  strokeThickness: 6,
+  color: '#39ff70',
+  stroke: '#010401',
+  strokeThickness: 4,
 };
 
 const SECONDARY_STYLE = {
   ...TEXT_STYLE,
   fontSize: '17px',
-  color: '#9bbbd2',
-  strokeThickness: 4,
+  color: '#17843b',
+  strokeThickness: 3,
 };
 
 export class Hud {
@@ -29,7 +29,7 @@ export class Hud {
       .setDepth(30);
     this.powerUpText = scene.add.text(640, 91, '', {
       ...SECONDARY_STYLE,
-      color: '#85f2ff',
+      color: '#b8ffca',
     })
       .setOrigin(0.5, 0)
       .setDepth(30);
@@ -38,38 +38,38 @@ export class Hud {
       .setDepth(30);
     this.soundButton = scene.add.text(1250, 63, '', {
       ...SECONDARY_STYLE,
-      color: '#68e8ff',
-      backgroundColor: '#102944',
+      color: '#39ff70',
+      backgroundColor: '#061d0b',
       padding: { x: 9, y: 5 },
     })
       .setOrigin(1, 0)
       .setDepth(31)
       .setInteractive({ useHandCursor: true })
       .on('pointerdown', onToggleSound)
-      .on('pointerover', () => this.soundButton.setBackgroundColor('#1d4667'))
-      .on('pointerout', () => this.soundButton.setBackgroundColor('#102944'));
+      .on('pointerover', () => this.soundButton.setBackgroundColor('#0b3217'))
+      .on('pointerout', () => this.soundButton.setBackgroundColor('#061d0b'));
     this.setSoundMuted(soundMuted);
   }
 
   update({ score, lives, remainingTime, level, highScore, shieldSeconds = 0 }) {
-    this.scoreText.setText(`Pontos: ${score}`);
-    this.recordText.setText(`Recorde: ${highScore}`);
-    this.livesText.setText(`Vidas: ${'◆'.repeat(Math.max(0, lives))}`);
-    this.levelText.setText(`Nível ${level} de 5`);
-    this.powerUpText.setText(shieldSeconds > 0 ? `ESCUDO: ${shieldSeconds}s` : '');
-    this.timeText.setText(`Tempo: ${remainingTime}s`);
+    this.scoreText.setText(`SCORE ${String(score).padStart(6, '0')}`);
+    this.recordText.setText(`HI-SCORE ${String(highScore).padStart(6, '0')}`);
+    this.livesText.setText(`LIFE [${'■'.repeat(Math.max(0, lives)).padEnd(3, '·')}]`);
+    this.levelText.setText(`SECTOR ${level}/5`);
+    this.powerUpText.setText(shieldSeconds > 0 ? `SHIELD ${shieldSeconds}s` : '');
+    this.timeText.setText(`TIME ${String(remainingTime).padStart(2, '0')}`);
   }
 
   setSoundMuted(muted) {
-    this.soundButton.setText(muted ? 'SOM OFF' : 'SOM ON');
+    this.soundButton.setText(muted ? '[AUDIO OFF]' : '[AUDIO ON]');
   }
 
   showLevelUp(level) {
     const { width, height } = this.scene.scale;
-    const announcement = this.scene.add.text(width / 2, height / 2 - 125, `NÍVEL ${level}`, {
+    const announcement = this.scene.add.text(width / 2, height / 2 - 125, `> SECTOR ${level} LOADED_`, {
       ...TEXT_STYLE,
       fontSize: '44px',
-      color: '#ffe09a',
+      color: '#b8ffca',
     }).setOrigin(0.5).setDepth(50).setScale(0.75).setAlpha(0);
 
     this.scene.tweens.add({
@@ -83,7 +83,7 @@ export class Hud {
     });
   }
 
-  showPowerUp(message, color = '#85f2ff') {
+  showPowerUp(message, color = '#39ff70') {
     const { width, height } = this.scene.scale;
     const announcement = this.scene.add.text(width / 2, height / 2 - 90, message, {
       ...TEXT_STYLE,
@@ -105,30 +105,32 @@ export class Hud {
 
   showGameOver({ score, highScore, isNewRecord, reason, onRestart, onMenu }) {
     const { width, height } = this.scene.scale;
-    const panel = this.scene.add.rectangle(0, 0, 680, 430, 0x061329, 0.97)
-      .setStrokeStyle(3, 0x68d9ff);
-    const title = this.scene.add.text(0, -155, 'FIM DA MISSÃO', {
+    const panel = this.scene.add.rectangle(0, 0, 680, 430, 0x010401, 0.97)
+      .setStrokeStyle(3, 0x39ff70);
+    const title = this.scene.add.text(0, -155, '> TRANSMISSÃO ENCERRADA_', {
       ...TEXT_STYLE,
-      fontSize: '47px',
-      color: '#68e8ff',
+      fontSize: '40px',
+      color: '#39ff70',
     }).setOrigin(0.5);
     const reasonText = this.scene.add.text(0, -88, reason, {
       ...TEXT_STYLE,
       fontSize: '22px',
       fontStyle: 'normal',
     }).setOrigin(0.5);
-    const scoreText = this.scene.add.text(0, -35, `Pontuação: ${score}`, {
+    const scoreText = this.scene.add.text(0, -35, `SCORE ${String(score).padStart(6, '0')}`, {
       ...TEXT_STYLE,
       fontSize: '31px',
     }).setOrigin(0.5);
     const recordText = this.scene.add.text(
       0,
       14,
-      isNewRecord ? `NOVO RECORDE: ${highScore}` : `Recorde: ${highScore}`,
+      isNewRecord
+        ? `NEW HI-SCORE ${String(highScore).padStart(6, '0')}`
+        : `HI-SCORE ${String(highScore).padStart(6, '0')}`,
       {
         ...TEXT_STYLE,
         fontSize: '23px',
-        color: isNewRecord ? '#ffe09a' : '#a9bdd1',
+        color: isNewRecord ? '#b8ffca' : '#17843b',
       },
     ).setOrigin(0.5);
 
@@ -148,9 +150,9 @@ export class Hud {
       onMenu,
       {
         fontSize: '19px',
-        color: '#d8f6ff',
-        backgroundColor: '#173756',
-        hoverColor: '#245578',
+        color: '#39ff70',
+        backgroundColor: '#061d0b',
+        hoverColor: '#0b3217',
         padding: { x: 22, y: 13 },
       },
     );

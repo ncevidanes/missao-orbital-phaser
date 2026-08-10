@@ -3,11 +3,12 @@ import Phaser from 'phaser';
 function scatterParticle(scene, x, y, color, index) {
   const angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
   const distance = Phaser.Math.Between(34, 105);
-  const particle = scene.add.circle(
+  const particle = scene.add.rectangle(
     x,
     y,
-    Phaser.Math.FloatBetween(2.5, 7),
-    index % 3 === 0 ? 0xffe5a3 : color,
+    Phaser.Math.Between(4, 9),
+    Phaser.Math.Between(4, 9),
+    index % 3 === 0 ? 0xb8ffca : color,
     0.95,
   ).setDepth(24);
 
@@ -23,11 +24,11 @@ function scatterParticle(scene, x, y, color, index) {
   });
 }
 
-export function createExplosion(scene, x, y, color = 0xff8748) {
-  const flash = scene.add.circle(x, y, 18, 0xffffff, 0.92).setDepth(23);
+export function createExplosion(scene, x, y, color = 0x39ff70) {
+  const flash = scene.add.rectangle(x, y, 34, 34, 0xb8ffca, 0.92).setDepth(23);
   scene.tweens.add({
     targets: flash,
-    radius: 48,
+    scale: 2.8,
     alpha: 0,
     duration: 230,
     ease: 'Quad.easeOut',
@@ -39,7 +40,7 @@ export function createExplosion(scene, x, y, color = 0xff8748) {
   }
 }
 
-export function createPickupBurst(scene, x, y, color = 0x68e8ff) {
+export function createPickupBurst(scene, x, y, color = 0x39ff70) {
   const ring = scene.add.circle(x, y, 16, color, 0)
     .setStrokeStyle(4, color, 0.95)
     .setDepth(23);
