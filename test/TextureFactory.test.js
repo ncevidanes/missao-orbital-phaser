@@ -20,7 +20,7 @@ function createContext() {
   };
 }
 
-test('generates every code-drawn texture used by version 0.3.2', () => {
+test('generates every code-drawn texture used by version 0.4.0', () => {
   const created = [];
   const scene = {
     game: { renderer: {} },
@@ -44,6 +44,7 @@ test('generates every code-drawn texture used by version 0.3.2', () => {
     'asteroid-small',
     'asteroid-medium',
     'asteroid-large',
+    'wandering-meteor',
     'crystal',
     'powerup-shield',
     'powerup-repair',

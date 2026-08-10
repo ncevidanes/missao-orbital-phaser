@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { RETRO_PALETTE_CSS } from './RetroPalette.js';
 import { GameScene } from '../scenes/GameScene.js';
 import { MenuScene } from '../scenes/MenuScene.js';
 
@@ -8,7 +9,12 @@ export function createGameConfig(parent) {
     parent,
     width: 1280,
     height: 720,
-    backgroundColor: '#081225',
+    backgroundColor: RETRO_PALETTE_CSS.void,
+    render: {
+      antialias: false,
+      pixelArt: true,
+      roundPixels: true,
+    },
     input: {
       activePointers: 3,
       touch: {

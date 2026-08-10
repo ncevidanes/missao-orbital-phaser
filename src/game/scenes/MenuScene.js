@@ -6,10 +6,10 @@ import { createGameTextures } from '../systems/TextureFactory.js';
 import { createTextButton } from '../ui/TextButton.js';
 
 const TITLE_STYLE = {
-  fontFamily: 'Inter, Arial, sans-serif',
+  fontFamily: '"Courier New", Courier, monospace',
   fontStyle: 'bold',
-  stroke: '#06101f',
-  strokeThickness: 8,
+  stroke: '#010401',
+  strokeThickness: 6,
 };
 
 export class MenuScene extends Phaser.Scene {
@@ -24,21 +24,21 @@ export class MenuScene extends Phaser.Scene {
     this.starting = false;
 
     const { width, height } = this.scale;
-    const orbit = this.add.circle(width / 2, 255, 148, 0x07162c, 0.7)
-      .setStrokeStyle(2, 0x2a79a6, 0.48);
-    this.add.circle(width / 2, 255, 105, 0x07162c, 0)
-      .setStrokeStyle(1, 0x68e8ff, 0.28);
+    const orbit = this.add.circle(width / 2, 267, 148, 0x031003, 0.72)
+      .setStrokeStyle(2, 0x17843b, 0.55);
+    this.add.circle(width / 2, 267, 105, 0x031003, 0)
+      .setStrokeStyle(1, 0x39ff70, 0.34);
 
-    const ship = this.add.image(width / 2, 248, 'player-ship')
+    const ship = this.add.image(width / 2, 260, 'player-ship')
       .setScale(1.5)
       .setDepth(4);
-    const shieldIcon = this.add.image(width / 2 - 155, 258, 'powerup-shield')
+    const shieldIcon = this.add.image(width / 2 - 155, 270, 'powerup-shield')
       .setDepth(4);
-    const repairIcon = this.add.image(width / 2 + 155, 258, 'powerup-repair')
+    const repairIcon = this.add.image(width / 2 + 155, 270, 'powerup-repair')
       .setDepth(4);
     this.tweens.add({
       targets: ship,
-      y: 260,
+      y: 272,
       angle: 2,
       duration: 1200,
       yoyo: true,
@@ -62,32 +62,39 @@ export class MenuScene extends Phaser.Scene {
       ease: 'Sine.easeInOut',
     });
 
-    this.add.text(width / 2, 72, 'MISSÃO ORBITAL', {
+    this.add.text(width / 2, 64, 'MISSÃO ORBITAL', {
       ...TITLE_STYLE,
       fontSize: '66px',
-      color: '#85f2ff',
+      color: '#39ff70',
     }).setOrigin(0.5).setDepth(5);
-    this.add.text(width / 2, 128, 'COLETE · DESVIE · SOBREVIVA', {
+    this.add.text(width / 2, 116, 'GREEN TERMINAL BUILD // SYSTEM ONLINE', {
       ...TITLE_STYLE,
-      fontSize: '19px',
-      color: '#b8d2e5',
-      letterSpacing: 5,
-      strokeThickness: 4,
+      fontSize: '18px',
+      color: '#b8ffca',
+      letterSpacing: 4,
+      strokeThickness: 3,
+    }).setOrigin(0.5).setDepth(5);
+
+    this.add.text(width / 2, 158, '[STARFIELD: OK]  [THRUSTERS: OK]  [METEOR WATCH: ACTIVE]', {
+      ...TITLE_STYLE,
+      fontSize: '15px',
+      color: '#17843b',
+      strokeThickness: 2,
     }).setOrigin(0.5).setDepth(5);
 
     const highScore = new HighScoreRepository().read();
-    this.add.text(width / 2, 406, `RECORDE: ${highScore}`, {
+    this.add.text(width / 2, 418, `> RECORDE ${String(highScore).padStart(6, '0')}`, {
       ...TITLE_STYLE,
       fontSize: '27px',
-      color: '#ffe09a',
-      strokeThickness: 5,
+      color: '#b8ffca',
+      strokeThickness: 3,
     }).setOrigin(0.5);
 
     createTextButton(
       this,
       width / 2,
       480,
-      'INICIAR MISSÃO',
+      '> INICIAR MISSÃO_',
       () => this.startGame(),
       { fontSize: '26px', padding: { x: 36, y: 17 } },
     );
@@ -100,33 +107,33 @@ export class MenuScene extends Phaser.Scene {
       () => this.toggleSound(),
       {
         fontSize: '18px',
-        color: '#d8f6ff',
-        backgroundColor: '#173756',
-        hoverColor: '#245578',
+        color: '#39ff70',
+        backgroundColor: '#061d0b',
+        hoverColor: '#0b3217',
         padding: { x: 20, y: 10 },
       },
     );
     this.updateSoundButton();
 
-    this.add.text(width / 2, 606, 'Setas, WASD ou toque · Escudo azul · Reparo verde', {
+    this.add.text(width / 2, 606, '> Setas, WASD ou toque // Escudo [S] // Reparo [+]', {
       ...TITLE_STYLE,
       fontSize: '20px',
       fontStyle: 'normal',
-      color: '#a9bdd1',
-      strokeThickness: 4,
+      color: '#39ff70',
+      strokeThickness: 3,
     }).setOrigin(0.5);
-    this.add.text(width / 2, 647, 'Sobreviva por 60 segundos e supere seu recorde', {
+    this.add.text(width / 2, 647, '> Sobreviva por 60s // Evite meteoros errantes', {
       ...TITLE_STYLE,
       fontSize: '16px',
       fontStyle: 'normal',
-      color: '#6f91aa',
-      strokeThickness: 3,
+      color: '#17843b',
+      strokeThickness: 2,
     }).setOrigin(0.5);
 
-    this.add.text(width - 24, height - 20, 'v0.3.2', {
+    this.add.text(width - 24, height - 20, 'v0.4.0 // CRT', {
       ...TITLE_STYLE,
       fontSize: '14px',
-      color: '#577a94',
+      color: '#17843b',
       strokeThickness: 2,
     }).setOrigin(1).setDepth(5);
 
@@ -142,7 +149,7 @@ export class MenuScene extends Phaser.Scene {
     this.starting = true;
     this.soundManager.unlock();
     this.soundManager.playStart();
-    this.cameras.main.fadeOut(260, 4, 11, 24);
+    this.cameras.main.fadeOut(260, 1, 4, 1);
     this.time.delayedCall(270, () => this.scene.start('GameScene'));
   }
 

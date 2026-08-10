@@ -1,15 +1,15 @@
 const DEFAULT_STYLE = {
-  fontFamily: 'Inter, Arial, sans-serif',
+  fontFamily: '"Courier New", Courier, monospace',
   fontSize: '23px',
   fontStyle: 'bold',
-  color: '#061329',
-  backgroundColor: '#68e8ff',
+  color: '#010401',
+  backgroundColor: '#39ff70',
   padding: { x: 26, y: 14 },
 };
 
 export function createTextButton(scene, x, y, label, onActivate, options = {}) {
   const baseColor = options.backgroundColor ?? DEFAULT_STYLE.backgroundColor;
-  const hoverColor = options.hoverColor ?? '#ffffff';
+  const hoverColor = options.hoverColor ?? '#b8ffca';
   const button = scene.add.text(x, y, label, {
     ...DEFAULT_STYLE,
     ...options,
